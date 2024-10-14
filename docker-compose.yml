@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourPassword123"
+    networks:
+      - my_overlay_network
+    ports:
+      - "1434:1433"
+
+  nodeapp:
+    image: mynodeapp:latest
+    networks:
+      - my_overlay_network
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 3
+
+  nginx-proxy:
+    image: mynginx:latest
+    networks:
+      - my_overlay_network
+    ports:
+      - "80:80"
+
+networks:
+  my_overlay_network:
+    driver: overlay
